@@ -56,11 +56,14 @@ Token 获取方法和实际验证边界见 [本地部署说明](LOCAL_DEPLOYMENT
 - [x] 充值检测
 - [x] 邮件消息订阅
 
-## 准备
+## **准备工作**
 
-- 一台长期运行的计算机，保持联网即可，不需要校园网
-- 已在一卡通界面绑定电费、空调、水费的宿舍情况
-- 抓包企业微信一卡通网页请求，或使用浏览器F12打开一卡通 H5 页面抓取 `cookies`、`bearer_token`
+1. 宿舍水电空调已绑定至一卡通系统->保证查询接口可用。
+2. 获取 Bearer Token：
+   - 登录[校园一卡通网站](https://ecardwxnew.scut.edu.cn/plat-pc/login)，通过统一认证和一卡通登录。
+   - 登录完了？打开F12，转到Application，点击Session storage，查看access_token字段，复制备用。[示例图](https://github.com/Hashi-Club/elec_room_info/blob/master/asserts/example.png)
+
+持续监控还需要一台长期运行、保持联网的计算机，不需要校园网。
 
 ## 快速开始
 
