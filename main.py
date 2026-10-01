@@ -2,7 +2,7 @@ import argparse
 import threading
 import time
 
-from elec_room_info.utils.query import ElecRoomQuery
+from elec_room_info.utils.query import ElecRoomQuery, QueryError
 from elec_room_info.utils.config import Config
 from omegaconf import DictConfig, OmegaConf
 from elec_room_info.addon import BalanceMonitor
@@ -23,8 +23,12 @@ class ElecRoomInfo:
 
     def run(self):
         while True:
-            self._query.record_data()
-            self._monitor.once()
+            try:
+                self._query.record_data()
+            except QueryError as error:
+                logger.warning('本轮查询失败，保留历史记录，下一轮重试：%s', error)
+            else:
+                self._monitor.once()
             logger.info(f"休眠 {self._query_interval} 秒，下次查询时间："
                         f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time() + self._query_interval))}")
             time.sleep(self._query_interval)

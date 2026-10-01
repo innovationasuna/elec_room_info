@@ -47,13 +47,15 @@ class CSVRecordHandler:
 
     def get_latest(self):
         # 读取CSV文件的最后一行
-        last_row = pd.read_csv(self._CSV_FILE_PATH,
-                               skiprows=lambda x: x != 0 and x != (sum(1 for line in open(self._CSV_FILE_PATH)) - 1))
+        csv_data = pd.read_csv(self._CSV_FILE_PATH)
+        if csv_data.empty:
+            return None
+        last_row = csv_data.iloc[-1]
         return {
-            'timestamp': last_row['timestamp'][0],
-            'water_balance': last_row['water_balance'][0],
-            'electricity_balance': last_row['electricity_balance'][0],
-            'air_conditioner_balance': last_row['air_conditioner_balance'][0]
+            'timestamp': last_row['timestamp'],
+            'water_balance': last_row['water_balance'],
+            'electricity_balance': last_row['electricity_balance'],
+            'air_conditioner_balance': last_row['air_conditioner_balance']
         }
 
     def get_last_second(self):

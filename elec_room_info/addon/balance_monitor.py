@@ -30,6 +30,8 @@ class BalanceMonitor:
 
     def check(self):
         last_record = self.csv_handler.get_latest()
+        if last_record is None:
+            return
         logger.debug('last_record: %s', last_record)
 
         if last_record['water_balance'] < self.threshold['water_balance'] or \

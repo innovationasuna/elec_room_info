@@ -1,5 +1,33 @@
 # Elec Room Info: SCUT 宿舍水电空调余额提醒
 
+## 本 fork 的改进
+
+基于 [sxdl/elec_room_info](https://github.com/sxdl/elec_room_info)，参考
+[Hashi-Club 的分支](https://github.com/Hashi-Club/elec_room_info)补充环境变量配置和数值解析，
+保留原有本地持续运行、Docker、CSV 历史、余额提醒和充值检测。
+
+- Token 支持 `BEARER_TOKEN` 环境变量、项目 `.env`、YAML 配置，按此顺序取非空值。
+- 查询超时、鉴权失败、响应结构变化会明确报错；解析失败不会被写成 0 元/0 度。
+- 查询失败保留历史并在下一周期重试，不触发基于旧数据的余额提醒。
+- `local_run.py query` 单独查询电费并输出 JSON，供之后的网页接入；保留学校原文，不把电量当成货币。
+- 提供本地独立环境和依赖锁定文件、13 项模拟响应回归测试。
+
+本地开始：
+
+```sh
+uv venv --python 3.11 .venv
+uv pip install --python .venv/bin/python -r requirements.lock.txt
+.venv/bin/python local_run.py init
+.venv/bin/python local_run.py set-token
+.venv/bin/python local_run.py query
+```
+
+已有配置时 `init` 不会覆盖。也可以复制 `.env.example` 为 `.env` 并填写 Token。
+Token 获取方法和实际验证边界见 [本地部署说明](LOCAL_DEPLOYMENT.md)，
+参考分支的取舍见 [改进记录](docs/fork-improvements.md)。本项目不会自动获取或刷新登录凭据。
+
+以下保留上游部署说明。
+
 🥵你还在因半夜空调欠费被热醒没到服务时间无法充值所困扰吗？
 
 😣你还在因忘充电费突然停电Boss快通关了实验跑到一半主机却关机了而痛苦吗？
@@ -143,7 +171,7 @@
 ---
 
 ## 注意事项
-1. 暂不支持环境变量传参
+   1. 本 fork 支持 `BEARER_TOKEN` 环境变量或 `.env`；其他参数仍通过 YAML 配置。
 2. 文件路径需确保程序有读写权限
 
 --- 
